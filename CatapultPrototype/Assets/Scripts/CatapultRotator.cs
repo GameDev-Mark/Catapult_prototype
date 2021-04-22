@@ -5,21 +5,22 @@ public class CatapultRotator : MonoBehaviour
     int catapultForwardRotSpeed;
     int catapultReverseRotSpeed;
     int speedIncrease;
-
-    bool slowSpeed;
+    Rigidbody rb;
 
     // unitys start function
     void Start()
     {
-        catapultForwardRotSpeed = 40;
-        catapultReverseRotSpeed = 30;
-        speedIncrease = 3;
+        catapultForwardRotSpeed = 5;
+        catapultReverseRotSpeed = 5;
+        speedIncrease = 8;
+        rb = GetComponent<Rigidbody>();
     }
-
-    // Update is called once per frame
-    void Update()
+ 
+    // unitys fixed update
+    void FixedUpdate()
     {
         CatapultRotating();
+        Debug.Log(catapultForwardRotSpeed);
     }
 
     // rotating the catapult arm , shooting and resetting
@@ -30,29 +31,34 @@ public class CatapultRotator : MonoBehaviour
         Vector3 zBotRotAngle = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 20f); // when rotator reaches bottom 
         zRotAngle.z = (zRotAngle.z > 180) ? zRotAngle.z - 360 : zRotAngle.z; // lets the angle be rotated accordinaly 
 
-        Debug.Log(catapultForwardRotSpeed);
-        if (Input.GetMouseButton(1)) // CATAPULT GO DOWN
+        Vector3 zForward = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, -2f); // ref to rotations , Z rotation (forward) 
+        Quaternion forwardRotation = Quaternion.Euler(zForward * catapultForwardRotSpeed * Time.deltaTime); // calculating angle (forward)
+
+        Vector3 zBackwards = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 2f); // ref to rotations , Z rotation (backwards) 
+        Quaternion backwardsRotation = Quaternion.Euler(zBackwards * catapultReverseRotSpeed * Time.deltaTime); // calculating angle (backwards)
+
+        // CATAPULT GO DOWN
+        if (Input.GetMouseButton(1)) 
         {
-            transform.RotateAround(transform.position, Vector3.forward, catapultReverseRotSpeed * Time.deltaTime);
+            rb.MoveRotation(rb.rotation * backwardsRotation);
         }
         else if(zRotAngle.z <= -90f)
         {
             transform.localEulerAngles = zTopRotAngle;
+            catapultForwardRotSpeed = 40;
         }
 
-        if (Input.GetMouseButton(0)) // CATAPULT GO UP
+        // CATAPULT GO UP
+        if (Input.GetMouseButton(0)) 
         {
-            canClickMouse = true;
             catapultForwardRotSpeed += speedIncrease;
-            transform.RotateAround(transform.position, Vector3.back, catapultForwardRotSpeed * Time.deltaTime);
+            rb.MoveRotation(rb.rotation * forwardRotation);
         }
         else if (zRotAngle.z >= 20f)
         {
             transform.localEulerAngles = zBotRotAngle;
-            canClickMouse = false;
-
         }
-        else if (canClickMouse == false)
+        else if (!Input.GetMouseButton(0))
         {
             catapultForwardRotSpeed = 40;
         }
