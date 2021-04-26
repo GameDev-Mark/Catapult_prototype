@@ -2,16 +2,16 @@
 
 public class CatapultRotator : MonoBehaviour
 {
-    int catapultForwardRotSpeed;
-    int catapultReverseRotSpeed;
-    int speedIncrease;
-    Rigidbody rb;
+    int catapultForwardRotSpeed; // forward rotation speed
+    int catapultReverseRotSpeed; // backwards rotation speed
+    int speedIncrease; // how much speed increases
+    Rigidbody rb; // rigidbody component
 
     // unitys start function
     void Start()
     {
         catapultForwardRotSpeed = 5;
-        catapultReverseRotSpeed = 5;
+        catapultReverseRotSpeed = 10;
         speedIncrease = 8;
         rb = GetComponent<Rigidbody>();
     }
@@ -20,7 +20,6 @@ public class CatapultRotator : MonoBehaviour
     void FixedUpdate()
     {
         CatapultRotating();
-        Debug.Log(catapultForwardRotSpeed);
     }
 
     // rotating the catapult arm , shooting and resetting
@@ -42,10 +41,10 @@ public class CatapultRotator : MonoBehaviour
         {
             rb.MoveRotation(rb.rotation * backwardsRotation);
         }
-        else if(zRotAngle.z <= -90f)
+        if (zRotAngle.z >= 20f)
         {
-            transform.localEulerAngles = zTopRotAngle;
-            catapultForwardRotSpeed = 40;
+            transform.localEulerAngles = zBotRotAngle;
+            catapultReverseRotSpeed = 0;
         }
 
         // CATAPULT GO UP
@@ -54,13 +53,17 @@ public class CatapultRotator : MonoBehaviour
             catapultForwardRotSpeed += speedIncrease;
             rb.MoveRotation(rb.rotation * forwardRotation);
         }
-        else if (zRotAngle.z >= 20f)
+        if (zRotAngle.z <= -90f)
         {
-            transform.localEulerAngles = zBotRotAngle;
+            transform.localEulerAngles = zTopRotAngle;
+            catapultForwardRotSpeed = 0;
         }
-        else if (!Input.GetMouseButton(0))
+
+        // if not key is pressed down then reset speeds
+        if (!Input.anyKey)
         {
-            catapultForwardRotSpeed = 40;
+            catapultForwardRotSpeed = 5;
+            catapultReverseRotSpeed = 10;
         }
     }
 }
