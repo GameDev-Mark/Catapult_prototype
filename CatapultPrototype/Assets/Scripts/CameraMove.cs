@@ -2,67 +2,87 @@
 
 public class CameraMove : MonoBehaviour
 {
-    float camMoveSpeed; // speed of camera moving
-    float camScrollSpeed;
+    float camSideMoveSpeed; // speed of camera moving
+    float camInandOutSpeed;
+
     Vector3 camPos;
     Vector3 camMinPos;
     Vector3 camMaxPos;
+    Vector3 camSideMinPos;
+    Vector3 camSideMaxPos;
 
     // unitys start function
     void Start()
     {
-        camMoveSpeed = 10f;
-        camScrollSpeed = 25f;
-        //camPos = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
-        //camMinPos = new Vector3(transform.localPosition.x, transform.localPosition.y, -9f);
-        camMaxPos = new Vector3(transform.localPosition.x, transform.localPosition.y, -20f);
-    }
-    
-    // unitys lateupdate function
-    void LateUpdate()
-    {
-        if(Input.GetKey(KeyCode.D)) // move to the right
-        {
-            transform.Translate(Vector3.right * camMoveSpeed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.A)) // move to the left
-        {
-            transform.Translate(Vector3.left * camMoveSpeed * Time.deltaTime);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Q)) // move camera to catapult
-        {
-            transform.position = new Vector3(0f, 8f, -9f);
-        }
+        camSideMoveSpeed = 20f;
+        camInandOutSpeed = 10f;
     }
 
     // unitys update function
     void Update()
     {
+        MoveInandOut();
+        MoveSideToSide();
+
         camPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        camMinPos = new Vector3(transform.position.x, transform.position.y, -9f);
 
-        if (Input.GetAxis("Mouse ScrollWheel" ) < 0f) // scroll out
+        if (Input.GetKeyDown(KeyCode.Q)) // move camera to catapult
         {
-            camScrollSpeed = 25f;
-            transform.Translate(Vector3.back * camScrollSpeed * Time.deltaTime);
+            transform.position = new Vector3(0f, 8f, -9f);
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") > 0f) // scroll in
-        {
-            camScrollSpeed = 25f;
-            transform.Translate(Vector3.forward * camScrollSpeed * Time.deltaTime);
-        }
-        else if (camPos.z >= -9f)
-        {
-            transform.position = camMinPos;
-            camScrollSpeed = 0f;
-            Debug.Log("-9");
-        }
-
-        //if (camPos.z >= -20f)
-        //{
-        //    transform.position = camMaxPos;
-        //}
     }
 
+    // move camera inwards and outwards
+    void MoveInandOut()
+    {
+        camMinPos = new Vector3(transform.position.x, transform.position.y, -9f);
+        camMaxPos = new Vector3(transform.localPosition.x, transform.localPosition.y, -20f);
+
+        if (Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.D) == false)
+        {
+            if (camPos.z >= -9f)
+            {
+                transform.position = camMinPos;
+            }
+            if (Input.GetKey(KeyCode.S)) // move outwards
+            {
+                transform.Translate(Vector3.back * camInandOutSpeed * Time.deltaTime);
+            }
+            if (camPos.z <= -20)
+            {
+                transform.position = camMaxPos;
+            }
+            if (Input.GetKey(KeyCode.W)) // move inwards
+            {
+                transform.Translate(Vector3.forward * camInandOutSpeed * Time.deltaTime);
+            }
+        }
+    }
+
+    // move camera left and right
+    void MoveSideToSide()
+    {
+        camSideMinPos = new Vector3(0f, transform.position.y, transform.position.z);
+        camSideMaxPos = new Vector3(30f, transform.position.y, transform.position.z);
+
+        if (Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.S) == false)
+        {
+           if(camPos.x <= 0f)
+            {
+                transform.position = camSideMinPos;
+            }
+            if (Input.GetKey(KeyCode.D)) // move right
+            {
+                transform.Translate(Vector3.right * camSideMoveSpeed * Time.deltaTime);
+            }
+            if (camPos.x >= 30f)
+            {
+                transform.position = camSideMaxPos;
+            }
+            if (Input.GetKey(KeyCode.A)) // move left
+            {
+                transform.Translate(Vector3.left * camSideMoveSpeed * Time.deltaTime);
+            }
+        }
+    }
 }
