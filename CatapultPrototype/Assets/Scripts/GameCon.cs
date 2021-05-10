@@ -1,44 +1,46 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
-using System;
 using TMPro;
 
 public class GameCon : MonoBehaviour
 {
-    GameObject objectThrown;
-    float objectsInPlay;
-    public TMP_Text objectInPlayText;
+    GameObject[] objectThrown;
 
+    float maxObjectsThrown;
+    float minObjectsThrown;
+    int amountSceneResets;
+
+    public TMP_Text objectInPlayText;
+    public TMP_Text ammountSceneResetsText;
+
+    SpawnObjects _spawnObjectsScript;
+
+    // unitys start function
     void Start()
     {
-        objectsInPlay = 0f;
+        maxObjectsThrown = 3f;
+        minObjectsThrown = 0f;
 
+        _spawnObjectsScript = GetComponentInParent<SpawnObjects>();
     }
 
     // unitys update function
     void Update()
     {
-        objectThrown = GameObject.FindWithTag("ObjectThrown");
+        objectThrown = GameObject.FindGameObjectsWithTag("ObjectThrown");
+        objectInPlayText.text = "Objects " + objectThrown.Length + " / " + maxObjectsThrown;
+        ammountSceneResetsText.text = "Resets " + amountSceneResets;
 
+        if(objectThrown.Length >= maxObjectsThrown)
+        {
+            _spawnObjectsScript.enabled = false;
+        }
+
+        // restart scene ---------------
         if (Input.GetKeyDown(KeyCode.E))
         {
+            amountSceneResets++;
             SceneManager.LoadScene(0);
         }
-
-        // check if object being thrown is active in hieracrhy // check if object is not in active in hierarchy, catch the null___________
-        try
-        {
-            if(objectThrown.gameObject.activeInHierarchy)
-                objectsInPlay++;
-            Debug.Log("true");
-        }
-        catch(NullReferenceException) 
-        {
-            if (!objectThrown.gameObject.activeInHierarchy)
-                objectsInPlay--;
-            Debug.Log("null");
-        }
-
-
     }
 }
