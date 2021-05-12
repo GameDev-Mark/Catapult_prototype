@@ -12,7 +12,7 @@ public class CatapultRotator : MonoBehaviour
     {
         catapultForwardRotSpeed = 5;
         catapultReverseRotSpeed = 21;
-        speedIncrease = 8;
+        speedIncrease = 10;
         rb = GetComponent<Rigidbody>();
     }
  

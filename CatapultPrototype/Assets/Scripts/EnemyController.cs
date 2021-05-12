@@ -2,7 +2,7 @@
 
 public class EnemyController : MonoBehaviour
 {
-    // detecting on collision from other objects // 
+    // detecting any collisions from other objects // 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Walls"))

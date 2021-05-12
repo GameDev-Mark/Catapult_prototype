@@ -16,6 +16,8 @@ public class CameraMove : MonoBehaviour
     {
         camSideMoveSpeed = 20f;
         camInandOutSpeed = 10f;
+
+        transform.position = new Vector3(0f, 8f, -18f);
     }
 
     // unitys update function
@@ -28,19 +30,19 @@ public class CameraMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q)) // move camera to catapult
         {
-            transform.position = new Vector3(0f, 8f, -9f);
+            transform.position = new Vector3(0f, 8f, -18f);
         }
     }
 
     // move camera inwards and outwards
     void MoveInandOut()
     {
-        camMinPos = new Vector3(transform.position.x, transform.position.y, -9f);
-        camMaxPos = new Vector3(transform.localPosition.x, transform.localPosition.y, -20f);
+        camMinPos = new Vector3(transform.position.x, transform.position.y, -16f);
+        camMaxPos = new Vector3(transform.localPosition.x, transform.localPosition.y, -30f);
 
         if (Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.D) == false)
         {
-            if (camPos.z >= -9f)
+            if (camPos.z >= -16f)
             {
                 transform.position = camMinPos;
             }
@@ -48,7 +50,7 @@ public class CameraMove : MonoBehaviour
             {
                 transform.Translate(Vector3.back * camInandOutSpeed * Time.deltaTime);
             }
-            if (camPos.z <= -20)
+            if (camPos.z <= -30)
             {
                 transform.position = camMaxPos;
             }
