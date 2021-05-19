@@ -3,8 +3,14 @@
 public class SpawnObjects : MonoBehaviour
 {
     public GameObject objectThrownPrefab; // prefab to spawn
+    public GameObject catapultHandPos; // catapult hand gameobject
 
-    Vector3 prefabSpawnLocation = new Vector3(-3.30f, 8f, 0f); // postion of prefab spawning
+    Vector3 prefabSpawnLocation; // where to spawn objects
+
+    void Start()
+    {
+        prefabSpawnLocation = new Vector3(catapultHandPos.transform.position.x, 5f, catapultHandPos.transform.position.z); // postion of prefab spawning
+    }
 
     // unitys update function
     void Update()

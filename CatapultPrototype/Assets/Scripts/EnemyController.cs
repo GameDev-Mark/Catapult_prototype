@@ -3,9 +3,9 @@
 public class EnemyController : MonoBehaviour
 {
     // detecting any collisions from other objects // 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerStay(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Walls"))
+        if (collision.gameObject.CompareTag("Walls") || collision.gameObject.CompareTag("ObjectThrown"))
         {
             Debug.Log("wall hit");
             DestroyEnemy();

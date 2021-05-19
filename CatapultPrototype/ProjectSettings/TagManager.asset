@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ObjectThrown
   - Walls
+  - LevelOne_TierSpawn
   layers:
   - Default
   - TransparentFX

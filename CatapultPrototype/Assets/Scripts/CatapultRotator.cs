@@ -1,19 +1,25 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CatapultRotator : MonoBehaviour
 {
     int catapultForwardRotSpeed; // forward rotation speed
     int catapultReverseRotSpeed; // backwards rotation speed
     int speedIncrease; // how much speed increases
+
     Rigidbody rb; // rigidbody component
+
+    Vector3 startingRot;
 
     // unitys start function
     void Start()
     {
         catapultForwardRotSpeed = 5;
-        catapultReverseRotSpeed = 21;
-        speedIncrease = 10;
+        catapultReverseRotSpeed = 30;
+        speedIncrease = 12;
         rb = GetComponent<Rigidbody>();
+
+        transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
     }
  
     // unitys fixed update
