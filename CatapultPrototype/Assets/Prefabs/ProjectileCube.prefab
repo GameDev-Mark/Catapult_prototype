@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 1523901742642658100}
   - component: {fileID: 1523901742642658101}
   - component: {fileID: 1523901742642658057}
+  - component: {fileID: 1918953109893080305}
   m_Layer: 0
-  m_Name: CubeMove
-  m_TagString: ObjectThrown
+  m_Name: ProjectileCube
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,3 +111,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 8
   m_CollisionDetection: 1
+--- !u!114 &1918953109893080305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523901742642658098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc56af07b6ddfa4cbb75d1178c9201d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

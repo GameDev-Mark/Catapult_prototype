@@ -56,6 +56,9 @@ public class CatapultRotator : MonoBehaviour
         // CATAPULT GO UP
         if (Input.GetMouseButton(0)) 
         {
+            if (EventSystem.current.IsPointerOverGameObject()) 
+                return;
+
             catapultForwardRotSpeed += speedIncrease;
             rb.MoveRotation(rb.rotation * forwardRotation);
         }
