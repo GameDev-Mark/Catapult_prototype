@@ -2,11 +2,11 @@
 
 public class ProjectileController : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Walls") || collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("hiiitttttttttt");
+            Destroy(gameObject, 2f);
         }
     }
 }

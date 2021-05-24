@@ -8,24 +8,30 @@ public class GameCon : MonoBehaviour
 {
 
     //-----
+    [Header("GameObjects List")]
     public List<GameObject> _LevelOne; // level one list of objects to spawn
+
+    [Header("GameObjects")]
     public GameObject addTier; // level one tier to spawn
     public GameObject SpawnLevelPos; // level one , the starting position in which the first tier should spawn
     GameObject[] levelOneTiersTAG; // level one spawn TAG
 
-    GameObject[] objectThrown; // objects that the catapult will throw
+    GameObject[] projectiles; // objects that the catapult will throw
+    GameObject[] enemyTag; // enemies within the scene
 
-    public GameObject levelButton;
-
-    GameObject[] enemyTag;
+    public GameObject levelButton; // next level button
+    public GameObject lostPanel; // lost panel , try again / exit button
+    public GameObject panelBlocker;
+    public GameObject resumeButton;
 
     //-----
     float levelsNumber; // current level number
-    float maxObjectsThrown; // max amount of objects allowed
-    float minObjectsThrown; // min amount of objects allowed
+    float maxProjectiles; // max amount of objects allowed
+    float minProjectiles; // min amount of objects allowed
 
     //-----
-    public TMP_Text objectInPlayText; // text for objects spawned
+    [Header("Texts")]
+    public TMP_Text projectilesText; // text for objects spawned
     public TMP_Text enemyCounterText; // current level text
     public TMP_Text currentLevelText; // current level text
 
@@ -38,11 +44,11 @@ public class GameCon : MonoBehaviour
     {
         levelsNumber = 1f;
 
-        maxObjectsThrown = 3f;
+        maxProjectiles = 3f;
 
         try
         {
-            minObjectsThrown = 0f;
+            minProjectiles = 0f;
         }
         catch (MissingReferenceException) { }
 
@@ -52,6 +58,8 @@ public class GameCon : MonoBehaviour
     // unitys update function
     void Update()
     {
+        LoseGame(); // function for losing game
+
         //-----
         levelOneTiersTAG = GameObject.FindGameObjectsWithTag("LevelOne_TierSpawn"); // finding the tagged objects within the scene
 
@@ -59,21 +67,17 @@ public class GameCon : MonoBehaviour
         enemyCounterText.text = enemyTag.Length + " Enemies";
         //-----
 
-        objectThrown = GameObject.FindGameObjectsWithTag("Projectile"); // finding the tagged objects within the scene
-        objectInPlayText.text = "Projectiles " + objectThrown.Length + "/" + maxObjectsThrown; // displaying and updating the text of how many objects there is
+        projectiles = GameObject.FindGameObjectsWithTag("Projectile"); // finding the tagged objects within the scene
+        projectilesText.text = "Projectiles " + _spawnObjectsScript.projectileAmount + "/" + maxProjectiles; // displaying and updating the text of how many objects there is
         //-----
 
         currentLevelText.text = "Level : " + levelsNumber.ToString("F1");  // F1 == 1 decimal
         //-----
 
-        if (objectThrown.Length >= maxObjectsThrown) // no more spawning of objects to throw when the max limit has been reached
+        if (_spawnObjectsScript.projectileAmount >= maxProjectiles) // no more spawning of objects to throw when the max limit has been reached
             _spawnObjectsScript.enabled = false;
-        else if(objectThrown.Length < maxObjectsThrown)
+        else if (_spawnObjectsScript.projectileAmount < maxProjectiles)
             _spawnObjectsScript.enabled = true;
-        //-----
-
-        if (Input.GetKeyDown(KeyCode.E)) //  restart scene 
-            SceneManager.LoadScene(0);
         //-----
 
         if (enemyTag.Length == 0) // if no enemies are in the scene then can go to the next level
@@ -81,6 +85,14 @@ public class GameCon : MonoBehaviour
             levelButton.gameObject.SetActive(true); // setting button to true 
         }
         //-----
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Time.timeScale = 0f;
+            lostPanel.SetActive(true);
+            panelBlocker.SetActive(true);
+            resumeButton.SetActive(true);
+        }
     }
 
     // instantiating new levels/tiers and destorying old ones, the player progresses onto the next level/tier
@@ -91,8 +103,10 @@ public class GameCon : MonoBehaviour
         //
         levelButton.gameObject.SetActive(false); // setting button to false when clicked
         //
-        foreach (GameObject throwing in objectThrown) // destroy any remaining throwables in scene, ready for next level
-            Destroy(throwing);
+        _spawnObjectsScript.projectileAmount = 0f;
+        //
+        foreach (GameObject _projectiles in projectiles)
+            Destroy(_projectiles);
         //
 
         if (_LevelOne.Count == 1)
@@ -157,9 +171,36 @@ public class GameCon : MonoBehaviour
         }
     }
 
+    // lose condition for the game, restart if player runs out of projectiles to throw and enemies are still standing, prompts lost panel
     void LoseGame()
     {
+        if (_spawnObjectsScript.projectileAmount == maxProjectiles)
+            foreach (GameObject _projectiles in projectiles)
+                if (levelButton.activeInHierarchy || enemyTag.Length == 0)
+                    lostPanel.SetActive(false);
+                else if (!levelButton.activeInHierarchy && _projectiles != null)
+                    lostPanel.SetActive(true); Debug.Log("HOW");
+    }
 
+    // attached to the try again button, restarts scene
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    // attached to the exit button, exits game
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    // attached to the resume button , resume the game from escape panel
+    public void ResumeButton()
+    {
+        Time.timeScale = 1f;
+        lostPanel.SetActive(false);
+        panelBlocker.SetActive(false);
+        resumeButton.SetActive(false);
     }
 }
 
