@@ -2,14 +2,11 @@
 
 public class CameraMove : MonoBehaviour
 {
-    float camSideMoveSpeed; // speed of camera moving
-    float camInandOutSpeed;
+    float camSideMoveSpeed; // speed move side to side
+    float camInandOutSpeed; // speed move forwards and backwards
 
-    Vector3 camPos;
-    Vector3 camMinPos;
-    Vector3 camMaxPos;
-    Vector3 camSideMinPos;
-    Vector3 camSideMaxPos;
+    Vector3 camPos; // reference to camera position
+    Vector3 camStartPos; // reference to start postion of camera
 
     // unitys start function
     void Start()
@@ -17,11 +14,12 @@ public class CameraMove : MonoBehaviour
         camSideMoveSpeed = 20f;
         camInandOutSpeed = 10f;
 
-        transform.position = new Vector3(0f, 8f, -18f);
+        camStartPos = new Vector3(0f, 8f, -16f);
+        transform.position = camStartPos;
     }
 
-    // unitys update function
-    void Update()
+    // unitys Fixedupdate function
+    void FixedUpdate()
     {
         MoveInandOut();
         MoveSideToSide();
@@ -30,33 +28,32 @@ public class CameraMove : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q)) // move camera to catapult
         {
-            transform.position = new Vector3(0f, 8f, -18f);
+            transform.position = camStartPos;
         }
     }
 
     // move camera inwards and outwards
     void MoveInandOut()
     {
-        camMinPos = new Vector3(transform.position.x, transform.position.y, -16f);
-        camMaxPos = new Vector3(transform.localPosition.x, transform.localPosition.y, -30f);
 
         if (Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.D) == false)
         {
-            if (camPos.z >= -16f)
+            if (camPos.z > -16f)
             {
-                transform.position = camMinPos;
+                transform.position = new Vector3(transform.position.x, transform.position.y, -16f);
+                Debug.Log("forward");
             }
             if (Input.GetKey(KeyCode.S)) // move outwards
             {
-                transform.Translate(Vector3.back * camInandOutSpeed * Time.deltaTime);
+                transform.Translate(Vector3.back * camInandOutSpeed * Time.deltaTime, Space.World);
             }
-            if (camPos.z <= -30)
+            if (camPos.z < -30)
             {
-                transform.position = camMaxPos;
+                transform.position = new Vector3(transform.position.x, transform.position.y, -30f);
             }
             if (Input.GetKey(KeyCode.W)) // move inwards
             {
-                transform.Translate(Vector3.forward * camInandOutSpeed * Time.deltaTime);
+                transform.Translate(Vector3.forward * camInandOutSpeed * Time.deltaTime, Space.World);
             }
         }
     }
@@ -64,26 +61,24 @@ public class CameraMove : MonoBehaviour
     // move camera left and right
     void MoveSideToSide()
     {
-        camSideMinPos = new Vector3(0f, transform.position.y, transform.position.z);
-        camSideMaxPos = new Vector3(30f, transform.position.y, transform.position.z);
-
         if (Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.S) == false)
         {
-           if(camPos.x <= 0f)
+           if(camPos.x < -1f)
             {
-                transform.position = camSideMinPos;
+                transform.position = new Vector3(-1f, transform.position.y, transform.position.z);
+                Debug.Log("Lefty");
             }
             if (Input.GetKey(KeyCode.D)) // move right
             {
                 transform.Translate(Vector3.right * camSideMoveSpeed * Time.deltaTime);
             }
-            if (camPos.x >= 30f)
+            if (camPos.x > 30f)
             {
-                transform.position = camSideMaxPos;
+                transform.position = new Vector3(30f, transform.position.y, transform.position.z);
             }
             if (Input.GetKey(KeyCode.A)) // move left
             {
-                transform.Translate(Vector3.left * camSideMoveSpeed * Time.deltaTime);
+                transform.Translate(Vector3.right * -camSideMoveSpeed * Time.deltaTime);
             }
         }
     }

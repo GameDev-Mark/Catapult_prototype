@@ -28,6 +28,7 @@ public class GameCon : MonoBehaviour
     float levelsNumber; // current level number
     float maxProjectiles; // max amount of objects allowed
     float minProjectiles; // min amount of objects allowed
+    float timerCheckEnemies; // Timer countdown for checking if enemies are still alive
 
     //-----
     [Header("Texts")]
@@ -43,8 +44,8 @@ public class GameCon : MonoBehaviour
     void Start()
     {
         levelsNumber = 1f;
-
         maxProjectiles = 3f;
+        timerCheckEnemies = 4f;
 
         try
         {
@@ -59,7 +60,7 @@ public class GameCon : MonoBehaviour
     void Update()
     {
         LoseGame(); // function for losing game
-
+        Debug.Log(Mathf.RoundToInt(timerCheckEnemies));
         //-----
         levelOneTiersTAG = GameObject.FindGameObjectsWithTag("LevelOne_TierSpawn"); // finding the tagged objects within the scene
 
@@ -175,11 +176,26 @@ public class GameCon : MonoBehaviour
     void LoseGame()
     {
         if (_spawnObjectsScript.projectileAmount == maxProjectiles)
-            foreach (GameObject _projectiles in projectiles)
-                if (levelButton.activeInHierarchy || enemyTag.Length == 0)
-                    lostPanel.SetActive(false);
-                else if (!levelButton.activeInHierarchy && _projectiles != null)
-                    lostPanel.SetActive(true); Debug.Log("HOW");
+        {
+            if (projectiles.Length > 0 || levelButton.activeInHierarchy)
+            {
+                lostPanel.SetActive(false);
+            }
+            else if (projectiles.Length <= 0)
+            {
+                timerCheckEnemies -= Time.deltaTime;
+                if(timerCheckEnemies <= 0f)
+                {
+                    lostPanel.SetActive(true);
+                    Debug.Log("ALL GONE");
+                }
+                // TODO : check if all projectiles are null before activating lost UI panel
+            }
+        }
+        if(lostPanel.activeInHierarchy)
+        {
+            timerCheckEnemies = 4f;
+        }
     }
 
     // attached to the try again button, restarts scene
@@ -203,4 +219,3 @@ public class GameCon : MonoBehaviour
         resumeButton.SetActive(false);
     }
 }
-
