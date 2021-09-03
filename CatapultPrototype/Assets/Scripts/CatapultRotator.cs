@@ -9,7 +9,8 @@ public class CatapultRotator : MonoBehaviour
 
     Rigidbody rb; // rigidbody component
 
-    Vector3 startingRot;
+    public AudioSource audioSource;
+    public AudioClip projectileThrowSFX;
 
     // unitys start function
     void Start()
@@ -17,7 +18,10 @@ public class CatapultRotator : MonoBehaviour
         catapultForwardRotSpeed = 5;
         catapultReverseRotSpeed = 46;
         speedIncrease = 12;
+
         rb = GetComponent<Rigidbody>();
+
+        
 
         transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
     }
@@ -66,6 +70,13 @@ public class CatapultRotator : MonoBehaviour
         {
             transform.localEulerAngles = zTopRotAngle;
             catapultForwardRotSpeed = 0;
+        }
+
+        if(zRotAngle.z <= -70f)
+        {
+            // TO DO  : play sound when releasing projectile
+            //audioSource.PlayOneShot(projectileThrowSFX);
+            Debug.Log("PLAY SOUND");
         }
 
         // if not key is pressed down then reset speeds
