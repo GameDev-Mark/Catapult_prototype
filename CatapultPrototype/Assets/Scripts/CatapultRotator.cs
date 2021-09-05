@@ -16,8 +16,8 @@ public class CatapultRotator : MonoBehaviour
     void Start()
     {
         catapultForwardRotSpeed = 5;
-        catapultReverseRotSpeed = 46;
-        speedIncrease = 12;
+        catapultReverseRotSpeed = 5;
+        speedIncrease = 13;
 
         rb = GetComponent<Rigidbody>();
 
@@ -43,7 +43,7 @@ public class CatapultRotator : MonoBehaviour
         Vector3 zForward = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, -2f); // ref to rotations , Z rotation (forward) 
         Quaternion forwardRotation = Quaternion.Euler(zForward * catapultForwardRotSpeed * Time.deltaTime); // calculating angle (forward)
 
-        Vector3 zBackwards = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 2f); // ref to rotations , Z rotation (backwards) 
+        Vector3 zBackwards = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 3f); // ref to rotations , Z rotation (backwards) 
         Quaternion backwardsRotation = Quaternion.Euler(zBackwards * catapultReverseRotSpeed * Time.deltaTime); // calculating angle (backwards)
 
         // CATAPULT GO DOWN
@@ -76,7 +76,7 @@ public class CatapultRotator : MonoBehaviour
         {
             // TO DO  : play sound when releasing projectile
             //audioSource.PlayOneShot(projectileThrowSFX);
-            Debug.Log("PLAY SOUND");
+            //Debug.Log("PLAY SOUND");
         }
 
         // if not key is pressed down then reset speeds

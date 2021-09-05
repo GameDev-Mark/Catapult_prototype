@@ -21,23 +21,30 @@ public class GameCon : MonoBehaviour
 
     public GameObject levelButton; // next level button
     public GameObject lostPanel; // lost panel , try again / exit button
-    public GameObject panelBlocker;
-    public GameObject resumeButton;
+    public GameObject panelBlocker; // background dampen blocker
+    public GameObject resumeButton; // resume button
+    public GameObject completedLevelOne; // end of level text panel
+    public GameObject ControlsPanel;
 
     //-----
     float levelsNumber; // current level number
     float maxProjectiles; // max amount of objects allowed
     float minProjectiles; // min amount of objects allowed
     float timerCheckEnemies; // Timer countdown for checking if enemies are still alive
+    float clockTime;
 
     //-----
     [Header("Texts")]
     public TMP_Text projectilesText; // text for objects spawned
     public TMP_Text enemyCounterText; // current level text
     public TMP_Text currentLevelText; // current level text
+    public TMP_Text clockTimeText;
 
     //-----
     SpawnObjects _spawnObjectsScript; // reference to spawnobjects script
+
+    //-----
+    bool startClockTime;
 
 
     // unitys start function
@@ -46,6 +53,7 @@ public class GameCon : MonoBehaviour
         levelsNumber = 1f;
         maxProjectiles = 3f;
         timerCheckEnemies = 4f;
+        clockTime = 0f;
 
         try
         {
@@ -60,7 +68,7 @@ public class GameCon : MonoBehaviour
     void Update()
     {
         LoseGame(); // function for losing game
-        Debug.Log(Mathf.RoundToInt(timerCheckEnemies));
+        //Debug.Log(Mathf.RoundToInt(timerCheckEnemies));
         //-----
         levelOneTiersTAG = GameObject.FindGameObjectsWithTag("LevelOne_TierSpawn"); // finding the tagged objects within the scene
 
@@ -82,23 +90,39 @@ public class GameCon : MonoBehaviour
         //-----
 
         if (enemyTag.Length == 0) // if no enemies are in the scene then can go to the next level
-        {
             levelButton.gameObject.SetActive(true); // setting button to true 
+
+        if (levelOneTiersTAG.Length >= 5f && enemyTag.Length == 0) // WIN THE LEVEL //
+        {
+            completedLevelOne.SetActive(true);
+            panelBlocker.SetActive(true);
+            levelButton.SetActive(false);
+            lostPanel.SetActive(false);
         }
         //-----
 
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             Time.timeScale = 0f;
             lostPanel.SetActive(true);
             panelBlocker.SetActive(true);
             resumeButton.SetActive(true);
         }
+        //-----
+
+        if (startClockTime == true)
+        {
+            clockTime += Time.deltaTime; // starting clock time
+            float clock = Mathf.Round(clockTime * 100f) / 100f;
+            clockTimeText.text = clock.ToString();
+        }
     }
 
     // instantiating new levels/tiers and destorying old ones, the player progresses onto the next level/tier
     public void NextLevel()
     {
+        //
+        startClockTime = true;
         //
         levelsNumber += 0.1f; // level text 
         //
@@ -187,7 +211,8 @@ public class GameCon : MonoBehaviour
                 if(timerCheckEnemies <= 0f)
                 {
                     lostPanel.SetActive(true);
-                    Debug.Log("ALL GONE");
+                    Time.timeScale = 0f;
+                    //Debug.Log("ALL GONE");
                 }
                 // TODO : check if all projectiles are null before activating lost UI panel
             }
@@ -202,6 +227,7 @@ public class GameCon : MonoBehaviour
     public void RestartScene()
     {
         SceneManager.LoadScene(0);
+        Time.timeScale = 1f;
     }
 
     // attached to the exit button, exits game
@@ -217,5 +243,11 @@ public class GameCon : MonoBehaviour
         lostPanel.SetActive(false);
         panelBlocker.SetActive(false);
         resumeButton.SetActive(false);
+    }
+
+    // attached to the okay button show the controls
+    public void ControlsOkayButton()
+    {
+        ControlsPanel.SetActive(false);
     }
 }

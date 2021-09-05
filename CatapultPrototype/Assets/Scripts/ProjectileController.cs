@@ -10,14 +10,14 @@ public class ProjectileController : MonoBehaviour
         if (collision.gameObject.CompareTag("Walls") || collision.gameObject.CompareTag("Enemy"))
         {
             // to do : explode on impact
-            Collider[] colliders = Physics.OverlapSphere(transform.position, 1.5f);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, 2.2f);
             foreach(Collider hit in colliders)
             {
                 Rigidbody enemyRB = hit.GetComponent<Rigidbody>();
 
                 if(enemyRB != null)
                 {
-                    enemyRB.AddExplosionForce(225f, transform.position, 1.5f, 4f);
+                    enemyRB.AddExplosionForce(240f, transform.position, 2.2f, 4f);
 
                     GameObject exploVFX = Instantiate(explosionVFX, transform.position, Quaternion.identity);
                     AudioSource.PlayClipAtPoint(explosionSFX, Camera.main.transform.position, 0.3f);

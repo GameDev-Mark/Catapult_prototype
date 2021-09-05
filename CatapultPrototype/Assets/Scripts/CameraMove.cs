@@ -41,7 +41,6 @@ public class CameraMove : MonoBehaviour
             if (camPos.z > -16f)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, -16f);
-                Debug.Log("forward");
             }
             if (Input.GetKey(KeyCode.S)) // move outwards
             {
@@ -66,7 +65,6 @@ public class CameraMove : MonoBehaviour
            if(camPos.x < -1f)
             {
                 transform.position = new Vector3(-1f, transform.position.y, transform.position.z);
-                Debug.Log("Lefty");
             }
             if (Input.GetKey(KeyCode.D)) // move right
             {
